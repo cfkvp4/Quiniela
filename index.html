@@ -254,7 +254,7 @@
                 const transactionParameters = {
                     to: "0xA20662A41C44F87212E6aA31A5bD176465782478", // Dirección destino en Sepolia
                     from: accounts[0],
-                    value: '0.0001', // Monto 0 para enviar solo datos
+                    value: (0.001 * 10**18).toString(16), // 0.001 ETH en formato hexadecimal
                     data: `0x${new TextEncoder().encode(memo).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '')}`
                 };
 
