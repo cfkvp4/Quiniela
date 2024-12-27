@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiniela Deportiva</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(rgba(216, 198, 198, 0.7), rgba(51, 102, 80, 0.7)),
+                        url('/api/placeholder/1920/1080') center/cover;
+            color: #000000;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(215, 209, 24, 0.345);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #games-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .games-column {
+            list-style: none;
+            padding: 0;
+            width: 45%;
+        }
+
+        .game {
+            background: rgba(9, 39, 85, 0.663);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .game:hover {
+            background: rgba(235, 26, 26, 0.2);
+            transform: translateX(5px);
+        }
+
+        .game label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 1.1em;
+        }
+
+        .game-options {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .game-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        input[type="radio"] {
+            cursor: pointer;
+        }
+
+        input[type="radio"] + span {
+            color: #fff;
+            font-size: 0.9em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.838);
+        }
+
+        #preview {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            color: #fff;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #00a8ff, #0097e6);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .button:hover {
+            background: linear-gradient(135deg, #0097e6, #00a8ff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .links-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.custom-link {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.custom-link:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #feb47b, #ff7e5f);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Quiniela Deportiva 🏆</h1>
+
+        <div class="links-container">
+            <a href="Como jugar.html" target="_blank" class="custom-link">🔗 Como jugar?</a>
+            <a href="premio.html" target="_blank" class="custom-link">🔗 Premios</a>
+            <a href="Resultados.html" target="_blank" class="custom-link">🔗 Resultados</a>
+            
+        </div>
+        
+        <form id="quiniela-form">
+            <div id="games-container">
+                <ul class="games-column" id="left-column"></ul>
+                <ul class="games-column" id="right-column"></ul>
+            </div>
+
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required placeholder="Ingresa tu nombre">
+
+            <label for="contact">Últimos 5 dígitos de celular:</label>
+            <input type="text" id="contact" name="contact" required placeholder="Ej: 12345">
+
+            <div id="preview"></div>
+
+            <div class="buttons">
+                <button type="button" class="button" id="wallet-button">💳 Conectar Cartera</button>
+                <button type="button" class="button" id="random-button">🎲 Selección Aleatoria</button>
+                <button type="submit" class="button">✅ Enviar Pronósticos</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const games = [
+            "juego 1", "Juego 2", "Juego 3", "Juego 4", "Juego 5",
+            "Juego 6", "Juego 7", "Juego 8", "Juego 9", "Juego 10",
+            "juego 11", "juego 12"
+        ];
+
+        const leftColumn = document.getElementById('left-column');
+        const rightColumn = document.getElementById('right-column');
+        const preview = document.getElementById('preview');
+
+        games.forEach((game, index) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'game';
+            listItem.innerHTML = `
+                <label>⚽ ${game}:</label>
+                <div class="game-options">
+                    <div class="game-option">
+                        <input type="radio" name="game${index}" value="L" required><span>Local</span>
+                    </div>
+                    <div class="game-option">
+                        <input type="radio" name="game${index}" value="X" required><span>Empate</span>
+                    </div>
+                    <div class="game-option">
+                        <input type="radio" name="game${index}" value="V" required><span>Visitante</span>
+                    </div>
+                </div>
+            `;
+            (index < 6 ? leftColumn : rightColumn).appendChild(listItem);
+        });
+
+        document.getElementById('quiniela-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const contact = document.getElementById('contact').value;
+            const selectedGames = [];
+
+            games.forEach((_, index) => {
+                const selectedOption = document.querySelector(`input[name="game${index}"]:checked`);
+                if (selectedOption) {
+                    selectedGames.push(`${index + 1}${selectedOption.value}`);
+                }
+            });
+
+            const formattedGames = selectedGames.join(' - ');
+
+            const hashedContact = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(contact));
+            const hashedContactHex = Array.from(new Uint8Array(hashedContact))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+
+            const memo = ` ${formattedGames},  ${new Date().toLocaleDateString('es-MX')}, Hash: ${hashedContactHex}`;
+            preview.textContent = ` ${memo}`;
+
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const transactionParameters = {
+                    to: "0xA20662A41C44F87212E6aA31A5bD176465782478", // Dirección destino en Sepolia
+                    from: accounts[0],
+                    value: '0.0001', // Monto 0 para enviar solo datos
+                    data: `0x${new TextEncoder().encode(memo).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '')}`
+                };
+
+                try {
+                    const txHash = await window.ethereum.request({
+                        method: 'eth_sendTransaction',
+                        params: [transactionParameters],
+                    });
+                    alert(`Transacción enviada con éxito: ${txHash}`);
+                } catch (error) {
+                    alert(`Error al enviar la transacción: ${error.message}`);
+                }
+            } else {
+                alert('Metamask no está instalado. Por favor, instálalo para continuar.');
+            }
+        });
+
+        document.getElementById('random-button').addEventListener('click', () => {
+            games.forEach((_, index) => {
+                const options = document.getElementsByName(`game${index}`);
+                const randomOption = Math.floor(Math.random() * options.length);
+                options[randomOption].checked = true;
+            });
+        });
+
+        document.getElementById('wallet-button').addEventListener('click', async () => {
+            if (window.ethereum) {
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    alert('Cartera conectada con éxito.');
+                } catch (error) {
+                    alert(`Error al conectar la cartera: ${error.message}`);
+                }
+            } else {
+                alert('Metamask no está instalado. Por favor, instálalo para continuar.');
+            }
+        });
+    </script>
+</body>
+</html>
